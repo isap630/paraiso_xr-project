@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Mi Paríso</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.1.0/dist/aframe-extras.min.js"></script>
+    <script src="./combo-ocean.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+    <script>
+      // got ocean, sky, and lighting code from video: https://www.youtube.com/watch?v=IHIASY5VrPk 
+      // Register the 'hdri' component
+      AFRAME.registerComponent('hdri', {
+        schema: {
+          url: {type: 'string'}, // Define the data schema
+        },
+        init: function () {
+          const { url } = this.data; // Get the URL from the component data
+          const sceneEl = this.el; // Reference to the A-Frame scene element
+          const scene = sceneEl.object3D; // THREE.js scene object
+          const renderer = sceneEl.renderer; // A-Frame renderer
+          // Set up the HDRI loader
+          const rgbeLoader = new THREE.RGBELoader();
+          rgbeLoader.setDataType(THREE.UnsignedByteType);
+          rgbeLoader.load(url, (texture) => {
+            // PMREM Generator for converting the texture to a suitable format
+            const pmremGenerator = new THREE.PMREMGenerator(renderer);
+            pmremGenerator.compileEquirectangularShader();
+            const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+            scene.environment = envMap; // Set the scene environment
+            texture.dispose();
+            pmremGenerator.dispose();
+          });
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="modal">
+      <div class="modalconent">
+        <h1>Mi Paríso</h1>
+
+        <h2>Bienvenidos! Welcome to a glimpse of a paradise my family calls la Republica Dominicana!</h2>
+        <button id="button">Enter</button>
+      </div>
+    </div>
+
+    <a-assets>
+      <img id="grass" src="img/grass.jpg">
+      <img id="road" src="img/road.jpg">
+      <img id="sand" src="img/sand.png">
+      <img id="sunset" src="img/twilight-cloud.jpg">
+      <a-asset-item id="palmtree" src="3d/palm-tree.glb"></a-asset-item>
+      <a-asset-item id="speaker" src="3d/speakers.glb"></a-asset-item>
+    </a-assets>
+
+    <a-scene
+      renderer="colorManagement: true; physicallyCorrectLights: true;"
+      hdri="url: https://cdn.glitch.global/4ae2ce04-2cd7-4411-b3fd-7503c389b5ce/RESIZE-EXPORT-128-64-wasteland_clouds_puresky_1k.hdr?v=1699382834457">
+      <a-ocean-plane height="100" width="100" position="0 -0.5 0"></a-ocean-plane>
+
+      <a-sky rotation="0 180 0" src="https://cdn.glitch.global/c2ccdc8b-d87a-49af-95e6-e3cd029bbd31/2048-polyhaven-wasteland_clouds_puresky.jpeg?v=1699386634988"></a-sky>
+      <a-plane src="#grass" position="0 0 0" rotation="-90 0 0" width="150" height="50"></a-plane>
+      <a-plane src="#road" position="0 0 35" rotation="-90 0 0" width="150" height="20"></a-plane>
+      <a-plane src="#grass" position="0 0 70" rotation="-90 0 0" width="150" height="50"></a-plane>
+      <a-plane src="#sand" position="0 0 -35" rotation="-90 0 0" width="150" height="20" transparent="true"></a-plane>
+      <a-entity light="color: #87601d; intensity: 0.6; castShadow: true" position="65.46418 5.64874 46.8977"></a-entity>
+
+      <a-entity scale="5 5 5" position="10 5 -30" rotation="0 55 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-10 5 -30" rotation="0 0 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+      <a-entity scale="0.5 0.5 0.5" position="-19 0 -25" rotation="0 210 0" gltf-model="#speaker" shadow="cast: true;"></a-entity>
+      <a-entity scale="0.5 0.5 0.5" position="-18 0 -25.5" rotation="0 180 0" gltf-model="#speaker" shadow="cast: true;"></a-entity>
+      <a-entity scale="0.5 0.5 0.5" position="-17 0 -25" rotation="0 150 0" gltf-model="#speaker" shadow="cast: true;"></a-entity>
+
+      <a-entity id="beach-sounds" 
+                position="-10 0 -40" 
+                sound="src: beach-ambiance.mp3; autoplay: true; loop: true; volume: 0.25; distanceModel: linear; maxDistance: 40; rolloffFactor: 1">
+      </a-entity>
+      
+      <a-entity id="beach-sounds" 
+                position="-50 0 -40" 
+                sound="src: beach-ambiance.mp3; autoplay: true; loop: true; volume: 0.25; distanceModel: linear; maxDistance: 40; rolloffFactor: 1">
+      </a-entity>
+      <a-entity id="beach-sounds" 
+                position="50 0 -40" 
+                sound="src: beach-ambiance.mp3; autoplay: true; loop: true; volume: 0.25; distanceModel: linear; maxDistance: 40; rolloffFactor: 1">
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>

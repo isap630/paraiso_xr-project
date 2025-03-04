@@ -1,0 +1,51 @@
+@keyframes fadeIn {
+    0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+ }
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 99999;
+  height: 100%;
+  width: 100%;
+  animation-name: fadeIn;
+  animation-duration: 3s;
+}
+.modalconent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255);
+  width: 40%;
+  padding: 2em;
+  border-radius: 25px;
+  font-family: "Montserrat", serif;
+  text-align: center;
+}
+
+.modalconent h2{
+  font-weight: normal;
+}
+.modalconent button {
+color: aliceblue;
+padding: 15px;
+border-radius: 20px;
+border: 2px;
+background: rgba(50, 27, 255, 0.6);
+font-size: 1.5em;
+transition: background-color 0.2s ease-in;;
+}
+
+.modalconent button:hover{
+  color: aliceblue;
+  cursor: pointer;
+  background: rgba(255, 50, 50, 0.6);
+  transition: background-color 0.2s ease-in;;
+  }
