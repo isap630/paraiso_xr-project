@@ -1,0 +1,18 @@
+newmtl White Matte Ceramic_material9
+illum 7
+Kd 0.735357 0.735357 0.735357
+adobe_interior_color 1 1 1
+Ni 1.5
+adobe_density 0
+Tr 0
+d 1
+Ka 0 0 0
+Ke 0 0 0
+map_Pm monumento/White Matte Ceramic_material9_metallic.png
+adobe_translucence 0
+map_Pr monumento/White Matte Ceramic_material9_roughness.png
+Ns 16
+Ks 1 1 1
+map_Kd monumento/White Matte Ceramic_material9_base_color.png
+norm monumento/White Matte Ceramic_material9_normal.png
+disp monumento/White Matte Ceramic_material9_height.png

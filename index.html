@@ -15,6 +15,9 @@
     <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.1.0/dist/aframe-extras.min.js"></script>
     <script src="./combo-ocean.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+
+    <script src="https://unpkg.com/aframe-stl-model-component/dist/aframe-stl-model-component.min.js"></script>
+
     <script>
       // got ocean, sky, and lighting code from video: https://www.youtube.com/watch?v=IHIASY5VrPk 
       // Register the 'hdri' component
@@ -42,58 +45,236 @@
         }
       });
     </script>
+    <script>
+    //Click item to play/pause sound
+    AFRAME.registerComponent('sound-events', {
+      init: function () {
+        var el = this.el;
+        let isPlaying = false;
+    
+        el.addEventListener('click', function () {
+        if(isPlaying) {
+            el.components.sound.pauseSound();
+            isPlaying = false;
+          } else {
+            el.components.sound.playSound();
+            isPlaying = true;
+          }
+        });
+      }
+    });
+    </script>
+    <script>
+      //used to add text when hovering objects
+      AFRAME.registerComponent('hover-text-toggle', {
+        init: function() {
+          const text = this.el.querySelector('#hoverText');
+    
+          this.el.addEventListener('mouseenter', () => {
+            text.setAttribute('visible', true);
+          });
+
+        this.el.addEventListener('mouseleave', () => {
+          text.setAttribute('visible', false);
+        });
+    }
+  });
+  </script>
   </head>
+
   <body>
     <div id="modal">
       <div class="modalconent">
         <h1>Mi Paríso</h1>
 
         <h2>Bienvenidos! Welcome to a glimpse of a paradise my family calls la Republica Dominicana!</h2>
+        <p>Find and click on all three colored blocks to listen</p>
         <button id="button">Enter</button>
       </div>
     </div>
 
     <a-assets>
+      <!--Images-->
       <img id="grass" src="img/grass.jpg">
       <img id="road" src="img/road.jpg">
       <img id="sand" src="img/sand.png">
       <img id="sunset" src="img/twilight-cloud.jpg">
+      <!--3D Assets-->
       <a-asset-item id="palmtree" src="3d/palm-tree.glb"></a-asset-item>
       <a-asset-item id="speaker" src="3d/speakers.glb"></a-asset-item>
+      <a-assets-item id="plane" src="3D/plane.glb"></a-assets-item>
+      <a-asset-item id="monument" src="3d/monumento.obj"></a-asset-item>
+      <a-asset-item id="chair" src="3d/beach_chair.glb"></a-asset-item>
+      <a-asset-item id="plant" src="3d/palm2.glb"></a-asset-item>
+      <a-asset-item id="bush" src="3d/bush.glb"></a-asset-item>
+      <a-asset-item id="scooter" src="3d/scooter.glb"></a-asset-item>
+      <a-asset-item id="house" src="3d/dominican_style_house.glb"></a-asset-item>
+      <!--Audio assets-->
+      <audio id="music" src="Antony-Santos.mp3" preload="auto"></audio>
+      <audio id="audio-1" src="voices/audio-1.m4a" preload="auto"></audio>
+      <audio id="audio-2" src="voices/audio-2.m4a" preload="auto"></audio>
+      <audio id="audio-3" src="voices/audio-3.m4a" preload="auto"></audio>
     </a-assets>
 
     <a-scene
       renderer="colorManagement: true; physicallyCorrectLights: true;"
-      hdri="url: https://cdn.glitch.global/4ae2ce04-2cd7-4411-b3fd-7503c389b5ce/RESIZE-EXPORT-128-64-wasteland_clouds_puresky_1k.hdr?v=1699382834457">
+      hdri="url: https://cdn.glitch.global/4ae2ce04-2cd7-4411-b3fd-7503c389b5ce/RESIZE-EXPORT-128-64-wasteland_clouds_puresky_1k.hdr?v=1699382834457"
+      cursor="rayOrigin: mouse">
+      
       <a-ocean-plane height="100" width="100" position="0 -0.5 0"></a-ocean-plane>
 
+      <!--Cursor-->
+      <a-entity id="rig"
+                movement-controls="constrainToNavMesh: true;
+                                   controls: checkpoint, gamepad, trackpad, keyboard, nipple;"
+                position="0 0 0">
+        <a-entity camera
+                  position="0 1.6 0"
+                  rotation="0 180 0"
+                  look-controls="pointerLockEnabled: true">
+          <!-- mouse reticle -->
+          <a-cursor></a-cursor>
+        </a-entity>
+      </a-entity> 
+
+      <!--Sky, and ground images-->
       <a-sky rotation="0 180 0" src="https://cdn.glitch.global/c2ccdc8b-d87a-49af-95e6-e3cd029bbd31/2048-polyhaven-wasteland_clouds_puresky.jpeg?v=1699386634988"></a-sky>
       <a-plane src="#grass" position="0 0 0" rotation="-90 0 0" width="150" height="50"></a-plane>
       <a-plane src="#road" position="0 0 35" rotation="-90 0 0" width="150" height="20"></a-plane>
-      <a-plane src="#grass" position="0 0 70" rotation="-90 0 0" width="150" height="50"></a-plane>
+      <a-plane src="#grass" position="0 0 55" rotation="-90 0 0" width="150" height="20"></a-plane>
       <a-plane src="#sand" position="0 0 -35" rotation="-90 0 0" width="150" height="20" transparent="true"></a-plane>
       <a-entity light="color: #87601d; intensity: 0.6; castShadow: true" position="65.46418 5.64874 46.8977"></a-entity>
 
+      <!--player restriction-->
+      <a-plane id="navmesh" position="0 0 20" rotation="-90 0 0" width="150" height="110" visible="false" nav-mesh></a-plane>
+
+      <!--BEACH ELEMENTS-->
       <a-entity scale="5 5 5" position="10 5 -30" rotation="0 55 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
       <a-entity scale="5 5 5" position="-10 5 -30" rotation="0 0 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-30 5 -30" rotation="0 30 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="20 5 -30.9" rotation="0 10 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="35 5 -30.2" rotation="0 70 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-40 5 -29.1" rotation="0 90 0" gltf-model="#palmtree" shadow="cast: true;"></a-entity>
+
+      <a-entity scale="20 20 20" position="-12.5 0 -29.1" rotation="0 70 0" gltf-model="#chair" shadow="cast: true;"></a-entity>
+      <a-entity scale="20 20 20" position="-8 0 -29.1" rotation="0 110 0" gltf-model="#chair" shadow="cast: true;"></a-entity>
+
       <a-entity scale="0.5 0.5 0.5" position="-19 0 -25" rotation="0 210 0" gltf-model="#speaker" shadow="cast: true;"></a-entity>
-      <a-entity scale="0.5 0.5 0.5" position="-18 0 -25.5" rotation="0 180 0" gltf-model="#speaker" shadow="cast: true;"></a-entity>
+
+      <a-gltf-model src="#speaker" 
+        scale="0.5 0.5 0.5" 
+        position="-18 0 -25.5" 
+        rotation="0 180 0" 
+        shadow="cast: true;"
+        sound="src: #music"
+        sound-events
+        hover-text-toggle
+        light="type: point; intensity: 5.0"
+        > 
+        <a-text
+          id="hoverText"
+          value="Click me to toggle"
+          color="#FFF"
+          align="center"
+          visible="false"
+          position="0 5 0"
+          geometry="primitive: plane; width: 1.75"
+          material="color: gree; opacity: 0.5"
+        ></a-text>
+      </a-gltf-model> 
+
       <a-entity scale="0.5 0.5 0.5" position="-17 0 -25" rotation="0 150 0" gltf-model="#speaker" shadow="cast: true;"></a-entity>
 
-      <a-entity id="beach-sounds" 
+      <a-entity class="beach-sound" 
                 position="-10 0 -40" 
                 sound="src: beach-ambiance.mp3; autoplay: true; loop: true; volume: 0.25; distanceModel: linear; maxDistance: 40; rolloffFactor: 1">
       </a-entity>
       
-      <a-entity id="beach-sounds" 
+      <a-entity class="beach-sound" 
                 position="-50 0 -40" 
                 sound="src: beach-ambiance.mp3; autoplay: true; loop: true; volume: 0.25; distanceModel: linear; maxDistance: 40; rolloffFactor: 1">
       </a-entity>
-      <a-entity id="beach-sounds" 
+      <a-entity class="beach-sound" 
                 position="50 0 -40" 
                 sound="src: beach-ambiance.mp3; autoplay: true; loop: true; volume: 0.25; distanceModel: linear; maxDistance: 40; rolloffFactor: 1">
       </a-entity>
 
+
+      <!--LAND ELEMENTS-->
+      <a-entity
+        scale="2 2 2"
+        position="0 14 35" 
+        rotation="0 90 0" 
+        gltf-model="#plane" 
+        shadow="cast: true;"
+        sound="src: clapping.mp3; autoplay: true; loop: true; volume: 1; distanceModel: linear; maxDistance: 20; rolloffFactor: 1">
+      </a-entity>
+
+      <a-entity obj-model="obj: #monument" material="color: white" scale="2 2 2" position="50 0 0" rotation="0 0 0"  shadow="cast: true;" color="#FFFFFF"></a-entity>
+
+      <a-entity scale="5 5 5" position="0 5 55" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="70 5 20" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="10 5 -10" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-20 5 20" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-65 5 15" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-50 5 50" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      <a-entity scale="5 5 5" position="-15 5 0" rotation="0 90 0" gltf-model="#plant" shadow="cast: true;"></a-entity>
+      
+
+      <a-entity scale="1 1 1" position="-72 -3 -10" rotation="0 90 0" gltf-model="#bush" shadow="cast: true;"></a-entity>
+      <a-entity scale="2 2 2" position="-65 1 14" rotation="0 45 15" gltf-model="#scooter" shadow="cast: true;"></a-entity>
+      <a-entity scale="1 1 1" position="-70 0 -5" rotation="0 180 0" gltf-model="#house" shadow="cast: true;"></a-entity>
+
+      <!--Voice notes-->
+      <a-entity geometry="primitive: box" position="10 1 60" material="color: red"
+          light="type: point; intensity: 2.0" sound="src: #audio-2" rotation="0 180 0"
+          sound-events
+          hover-text-toggle>
+          <a-text
+          id="hoverText"
+          value="Click me to toggle"
+          color="#FFF"
+          align="center"
+          visible="false"
+          position="0 1 0"
+          geometry="primitive: plane; width: 1"
+          material="color: white; opacity: 0.0"
+        ></a-text>
+      </a-entity>
+      <a-entity geometry="primitive: box" position="-70 1 3" material="color: blue"
+          light="type: point; intensity: 2.0" sound="src: #audio-3" rotation="0 90 0"
+          sound-events
+          hover-text-toggle>
+          <a-text
+          id="hoverText"
+          value="Click me to toggle"
+          color="#FFF"
+          align="center"
+          visible="false"
+          position="0 1 0"
+          geometry="primitive: plane; width: 1"
+          material="color: white; opacity: 0.0"
+        ></a-text>
+      </a-entity>
+      <a-entity geometry="primitive: box" position="50 1 0" material="color: white"
+          light="type: point; intensity: 2.0" sound="src: #audio-1"
+          sound-events
+          hover-text-toggle>
+          <a-text
+          id="hoverText"
+          value="Click me to toggle"
+          color="#FFF"
+          align="center"
+          visible="false"
+          position="0 1 0"
+          geometry="primitive: plane; width: 1"
+          material="color: white; opacity: 0.0"
+        ></a-text>
+      </a-entity>
+
+
+    
     </a-scene>
+  
   </body>
 </html>

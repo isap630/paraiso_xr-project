@@ -2,9 +2,8 @@ window.onload = function() {
 
   document.getElementById("button").onclick = function() {
     document.getElementById("modal").style.display = "none";
-    const soundEntity = document.getElementById('beach-sounds');
-    soundEntity.components.sound.playSound();
+    document.querySelectorAll('.beach-sound').forEach(soundEntity => {
+      soundEntity.components.sound.playSound();
+  });
   };
 };
-
-    

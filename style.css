@@ -49,3 +49,8 @@ transition: background-color 0.2s ease-in;;
   background: rgba(255, 50, 50, 0.6);
   transition: background-color 0.2s ease-in;;
   }
+
+.modalconent p{
+  color: blue;
+  font-weight: bold;
+}
