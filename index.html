@@ -111,6 +111,7 @@
       <a-asset-item id="house" src="3d/dominican_style_house.glb"></a-asset-item>
       <!--Audio assets-->
       <audio id="music" src="Antony-Santos.mp3" preload="auto"></audio>
+      <audio id="clapping" src="clapping.mp3" preload="auto"></audio>
       <audio id="audio-1" src="voices/audio-1.m4a" preload="auto"></audio>
       <audio id="audio-2" src="voices/audio-2.m4a" preload="auto"></audio>
       <audio id="audio-3" src="voices/audio-3.m4a" preload="auto"></audio>
@@ -201,14 +202,14 @@
 
 
       <!--LAND ELEMENTS-->
-      <a-entity
-        gltf-model="#airplane"
+      <a-gltf-model
+        src="#airplane"
         scale="2 2 2"
         position="0 14 35" 
         rotation="0 90 0"  
         shadow="cast: true;"
-        sound="src: clapping.mp3; autoplay: true; loop: true; volume: 1; distanceModel: linear; maxDistance: 20; rolloffFactor: 1">
-      </a-entity>
+        sound="src: #music; autoplay: true; loop: true; volume: 1; distanceModel: linear; maxDistance: 20; rolloffFactor: 1">
+      </a-gltf-model> 
 
       <a-entity obj-model="obj: #monument" material="color: white" scale="2 2 2" position="50 0 0" rotation="0 0 0"  shadow="cast: true;" color="#FFFFFF"></a-entity>
 
